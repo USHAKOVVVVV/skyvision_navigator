@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 5
+names: ['building', 'field', 'forest', 'lake', 'road']
+
+roboflow:
+  workspace: ignat-vfgqz
+  project: all_classes_without_zdroad-ohrlx
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/ignat-vfgqz/all_classes_without_zdroad-ohrlx/dataset/1

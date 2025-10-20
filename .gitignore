@@ -1,0 +1,4 @@
+new_yolo_env/
+__pycache__/
+data/
+.cache
