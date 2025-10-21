@@ -2,8 +2,8 @@ train: ../train/images
 val: ../valid/images
 test: ../test/images
 
-nc: 5
-names: ['building', 'field', 'forest', 'lake', 'road']
+nc: 6
+names: ['building', 'field', 'forest', 'lake', 'road','zrail']
 
 roboflow:
   workspace: ignat-vfgqz
