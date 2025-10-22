@@ -6,3 +6,4 @@ data/
 test/
 train/
 valid/
+skyvision_env/
