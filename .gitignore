@@ -2,7 +2,7 @@ new_yolo_env/
 __pycache__/
 data/
 .cache
-Моделюси/
 test/
 train/
 valid/
+skyvision_env/
