@@ -1,0 +1,444 @@
+{
+  "metadata": {
+    "source_image": "output_img/map_55d954635_37d942221_to_55d962248_37d953572.jpg",
+    "image_size": {
+      "width": 2304,
+      "height": 2560
+    },
+    "gps_bounds": {
+      "top_left": [
+        55.954635,
+        37.942221
+      ],
+      "bottom_right": [
+        55.962248,
+        37.953572
+      ]
+    },
+    "processing_date": "2025-10-26T18:02:09.600634",
+    "model_used": "../runs/segment/yolov8n_gpu_simple_1/weights/best.pt",
+    "processing_params": {
+      "tile_size": 640,
+      "overlap": 64,
+      "confidence_threshold": 0.3
+    }
+  },
+  "objects": [
+    {
+      "class_id": 1,
+      "confidence": 0.6369603276252747,
+      "gps_coordinates": {
+        "latitude": 55.955572,
+        "longitude": 37.94361
+      }
+    },
+    {
+      "class_id": 5,
+      "confidence": 0.561972975730896,
+      "gps_coordinates": {
+        "latitude": 55.955206,
+        "longitude": 37.944546
+      }
+    },
+    {
+      "class_id": 1,
+      "confidence": 0.30243873596191406,
+      "gps_coordinates": {
+        "latitude": 55.955578,
+        "longitude": 37.946645
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.5741700530052185,
+      "gps_coordinates": {
+        "latitude": 55.954781,
+        "longitude": 37.953183
+      }
+    },
+    {
+      "class_id": 1,
+      "confidence": 0.3206232786178589,
+      "gps_coordinates": {
+        "latitude": 55.955703,
+        "longitude": 37.951956
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.6792815327644348,
+      "gps_coordinates": {
+        "latitude": 55.95785,
+        "longitude": 37.944605
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.6732416152954102,
+      "gps_coordinates": {
+        "latitude": 55.957582,
+        "longitude": 37.94528
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.4051593244075775,
+      "gps_coordinates": {
+        "latitude": 55.958076,
+        "longitude": 37.944788
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3794563114643097,
+      "gps_coordinates": {
+        "latitude": 55.957469,
+        "longitude": 37.945098
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.4701533615589142,
+      "gps_coordinates": {
+        "latitude": 55.957588,
+        "longitude": 37.945295
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3749149441719055,
+      "gps_coordinates": {
+        "latitude": 55.957478,
+        "longitude": 37.945108
+      }
+    },
+    {
+      "class_id": 1,
+      "confidence": 0.5308094024658203,
+      "gps_coordinates": {
+        "latitude": 55.9573,
+        "longitude": 37.952148
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.5588603019714355,
+      "gps_coordinates": {
+        "latitude": 55.95876,
+        "longitude": 37.944788
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.5237981081008911,
+      "gps_coordinates": {
+        "latitude": 55.95903,
+        "longitude": 37.945123
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.4771851599216461,
+      "gps_coordinates": {
+        "latitude": 55.958088,
+        "longitude": 37.944793
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.42676061391830444,
+      "gps_coordinates": {
+        "latitude": 55.959042,
+        "longitude": 37.945118
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.6683858036994934,
+      "gps_coordinates": {
+        "latitude": 55.958593,
+        "longitude": 37.945418
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.5590873956680298,
+      "gps_coordinates": {
+        "latitude": 55.958944,
+        "longitude": 37.945773
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.49070534110069275,
+      "gps_coordinates": {
+        "latitude": 55.959027,
+        "longitude": 37.945133
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.44290947914123535,
+      "gps_coordinates": {
+        "latitude": 55.959042,
+        "longitude": 37.945133
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.41310787200927734,
+      "gps_coordinates": {
+        "latitude": 55.959444,
+        "longitude": 37.947719
+      }
+    },
+    {
+      "class_id": 1,
+      "confidence": 0.40359944105148315,
+      "gps_coordinates": {
+        "latitude": 55.958439,
+        "longitude": 37.947818
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3918156325817108,
+      "gps_coordinates": {
+        "latitude": 55.959744,
+        "longitude": 37.946635
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3266482651233673,
+      "gps_coordinates": {
+        "latitude": 55.958685,
+        "longitude": 37.945684
+      }
+    },
+    {
+      "class_id": 1,
+      "confidence": 0.5735211968421936,
+      "gps_coordinates": {
+        "latitude": 55.959001,
+        "longitude": 37.949508
+      }
+    },
+    {
+      "class_id": 1,
+      "confidence": 0.4262939393520355,
+      "gps_coordinates": {
+        "latitude": 55.959012,
+        "longitude": 37.952148
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.32042214274406433,
+      "gps_coordinates": {
+        "latitude": 55.960059,
+        "longitude": 37.942344
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.5505384802818298,
+      "gps_coordinates": {
+        "latitude": 55.96121,
+        "longitude": 37.947251
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.5296741724014282,
+      "gps_coordinates": {
+        "latitude": 55.96019,
+        "longitude": 37.947305
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.44626232981681824,
+      "gps_coordinates": {
+        "latitude": 55.960157,
+        "longitude": 37.946571
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.4389932453632355,
+      "gps_coordinates": {
+        "latitude": 55.960966,
+        "longitude": 37.947719
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.4309423267841339,
+      "gps_coordinates": {
+        "latitude": 55.961615,
+        "longitude": 37.947187
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.4246422052383423,
+      "gps_coordinates": {
+        "latitude": 55.961377,
+        "longitude": 37.947379
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.4119032919406891,
+      "gps_coordinates": {
+        "latitude": 55.960434,
+        "longitude": 37.94734
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.37542691826820374,
+      "gps_coordinates": {
+        "latitude": 55.960779,
+        "longitude": 37.947571
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.34429875016212463,
+      "gps_coordinates": {
+        "latitude": 55.960725,
+        "longitude": 37.946842
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3387351930141449,
+      "gps_coordinates": {
+        "latitude": 55.959919,
+        "longitude": 37.947138
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3272532820701599,
+      "gps_coordinates": {
+        "latitude": 55.961073,
+        "longitude": 37.947158
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.32086390256881714,
+      "gps_coordinates": {
+        "latitude": 55.959994,
+        "longitude": 37.948409
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3120124340057373,
+      "gps_coordinates": {
+        "latitude": 55.961623,
+        "longitude": 37.949724
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.31089743971824646,
+      "gps_coordinates": {
+        "latitude": 55.961118,
+        "longitude": 37.949404
+      }
+    },
+    {
+      "class_id": 1,
+      "confidence": 0.49136069416999817,
+      "gps_coordinates": {
+        "latitude": 55.960725,
+        "longitude": 37.952148
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3666548430919647,
+      "gps_coordinates": {
+        "latitude": 55.961695,
+        "longitude": 37.944049
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3360835015773773,
+      "gps_coordinates": {
+        "latitude": 55.961933,
+        "longitude": 37.942467
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3061884045600891,
+      "gps_coordinates": {
+        "latitude": 55.962212,
+        "longitude": 37.942305
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3039347231388092,
+      "gps_coordinates": {
+        "latitude": 55.962102,
+        "longitude": 37.94298
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.5076411962509155,
+      "gps_coordinates": {
+        "latitude": 55.96179,
+        "longitude": 37.94767
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.30286213755607605,
+      "gps_coordinates": {
+        "latitude": 55.961894,
+        "longitude": 37.948158
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3815692067146301,
+      "gps_coordinates": {
+        "latitude": 55.962218,
+        "longitude": 37.949734
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3759554326534271,
+      "gps_coordinates": {
+        "latitude": 55.961912,
+        "longitude": 37.949951
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.3757151961326599,
+      "gps_coordinates": {
+        "latitude": 55.961891,
+        "longitude": 37.948217
+      }
+    },
+    {
+      "class_id": 0,
+      "confidence": 0.35062548518180847,
+      "gps_coordinates": {
+        "latitude": 55.962108,
+        "longitude": 37.949783
+      }
+    }
+  ]
+}

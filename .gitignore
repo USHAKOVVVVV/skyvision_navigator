@@ -1,8 +1,8 @@
 new_yolo_env/
 __pycache__/
-data/
+# data/
 .cache
- 
+calculate_map.ipynb
 test/
 train/
 valid/
