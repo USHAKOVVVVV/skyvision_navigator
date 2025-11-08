@@ -3,11 +3,11 @@ val: ../valid/images
 test: ../test/images
 
 nc: 6
-names: ['building', 'field', 'forest', 'lake', 'road','zrail']
+names: ['building', 'field', 'forest', 'lake', 'road', 'zrail']
 
 roboflow:
   workspace: ignat-vfgqz
-  project: all_classes_without_zdroad-ohrlx
-  version: 1
+  project: for_ksusha_liza_ignat-r9580
+  version: 6
   license: CC BY 4.0
-  url: https://universe.roboflow.com/ignat-vfgqz/all_classes_without_zdroad-ohrlx/dataset/1
+  url: https://universe.roboflow.com/ignat-vfgqz/for_ksusha_liza_ignat-r9580/dataset/6

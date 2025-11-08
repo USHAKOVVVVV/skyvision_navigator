@@ -236,13 +236,13 @@ def process_map_with_yolo_tiled(model_path, image_path, output_json_path, output
             print(f"   - {class_name}: {count} объектов")
 if __name__ == "__main__":
     # Настройки
-    MODEL_PATH = '../runs/segment/yolov8n_gpu_simple_1/weights/best.pt'  # путь к твоей модели
+    MODEL_PATH = '../runs/segment/yolov8n_gpu_updgrade_1/weights/best.pt'  # путь к твоей модели
     IMAGE_PATH = "output_img/map_55d948091_37d941703_to_55d967844_37d996474.jpg"  # карта из папки maps
     base_name = os.path.splitext(os.path.basename(IMAGE_PATH))[0].replace('map_', '')
 
 # Создаем названия файлов с координатами
-    OUTPUT_JSON = os.path.join("output_json", f"json_{base_name}.json")
-    OUTPUT_POLYGONS = os.path.join("output_yolo_img", f"polygons_{base_name}.jpg")
+    OUTPUT_JSON = os.path.join("output_json", f"json_{base_name}_upd_yolo.json")
+    OUTPUT_POLYGONS = os.path.join("output_yolo_img", f"polygons_{base_name}_upd_yolo.jpg")
     
 
      # Параметры тайлинга

@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 import re
 import os
+import json
+from datetime import datetime
 
 def parse_coordinates(filename):
     """Парсинг координат из имени файла"""
@@ -82,7 +84,7 @@ def create_route_visualization(main_image, coords, waypoints, output_path="route
     return route_viz
 
 def create_drone_animation_with_gps(input_image, output_video, duration_seconds=30, 
-                                   fps=60, output_size=(640, 640), altitude=100):
+                                   fps=30, output_size=(640, 640), altitude=100):
     """
     Создает анимацию полета дрона с привязкой к GPS координатам
     """
@@ -153,6 +155,19 @@ def create_drone_animation_with_gps(input_image, output_video, duration_seconds=
     
     total_frames = int(fps * duration_seconds)
     
+    # Создаем структуру для хранения данных GPS
+    gps_data = {
+        "video_info": {
+            "filename": output_video,
+            "duration_seconds": duration_seconds,
+            "fps": fps,
+            "total_frames": total_frames,
+            "creation_time": datetime.now().isoformat(),
+            "map_coordinates": coords
+        },
+        "flight_data": []
+    }
+    
     print("Генерация плавной анимации с GPS привязкой...")
     print(f"Маршрут через {len(waypoints)} точек")
     print(f"Длительность: {duration_seconds} сек, Кадров: {total_frames}")
@@ -198,6 +213,25 @@ def create_drone_animation_with_gps(input_image, output_video, duration_seconds=
             current_scale = mid_scale + (end_scale - mid_scale) * smoothstep(0, 1, height_progress)
         
         positions.append((x_center, y_center, current_lat, current_lon, current_scale))
+        
+        # Сохраняем данные для JSON (каждый кадр)
+        frame_data = {
+            "frame_number": frame_num,
+            "timestamp_seconds": round(frame_num / fps, 3),
+            "timestamp_formatted": f"{int(frame_num // fps):02d}:{int(frame_num % fps):02d}",
+            "gps_coordinates": {
+                "latitude": round(current_lat, 6),
+                "longitude": round(current_lon, 6)
+            },
+            "pixel_coordinates": {
+                "x": x_center,
+                "y": y_center
+            },
+            "altitude_meters": int(altitude * current_scale/0.3),
+            "scale_factor": round(current_scale, 3),
+            "progress_percent": round(progress * 100, 1)
+        }
+        gps_data["flight_data"].append(frame_data)
     
     # Генерируем кадры видео
     print("Генерация кадров...")
@@ -266,12 +300,51 @@ def create_drone_animation_with_gps(input_image, output_video, duration_seconds=
             print(f"Обработано: {progress*100:.1f}%")
     
     out.release()
+    
+    # Сохраняем GPS данные в JSON файл
+    json_filename = output_video.replace('.mp4', '_gps_data.json')
+    with open(json_filename, 'w', encoding='utf-8') as f:
+        json.dump(gps_data, f, indent=2, ensure_ascii=False)
+    
+    # Также сохраняем упрощенную версию (только ключевые кадры)
+    simplified_data = {
+        "video_info": gps_data["video_info"],
+        "key_frames": []
+    }
+    
+    # Берем каждый 10-й кадр для упрощенной версии
+    for i in range(0, len(gps_data["flight_data"]), 10):
+        simplified_data["key_frames"].append(gps_data["flight_data"][i])
+    
+    simplified_json_filename = output_video.replace('.mp4', '_gps_simplified.json')
+    with open(simplified_json_filename, 'w', encoding='utf-8') as f:
+        json.dump(simplified_data, f, indent=2, ensure_ascii=False)
+    
     print(f"✅ Видео сохранено: {output_video}")
     print(f"📊 Длительность: {duration_seconds} сек")
     print(f"🎞️ Кадров: {total_frames}")
     print(f"🔄 FPS: {fps}")
     print(f"📏 Размер: {output_size[0]}x{output_size[1]}")
     print(f"🛩️ Высота: {altitude} м")
+    print(f"🗺️ GPS данные сохранены: {json_filename}")
+    print(f"🗺️ Упрощенные GPS данные: {simplified_json_filename}")
+
+# Функция для чтения GPS данных из JSON
+def read_gps_data(json_file):
+    """Чтение GPS данных из JSON файла"""
+    with open(json_file, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+# Функция для поиска GPS координат по времени
+def find_gps_by_time(json_file, timestamp_seconds):
+    """Найти GPS координаты по времени в секундах"""
+    data = read_gps_data(json_file)
+    
+    for frame_data in data["flight_data"]:
+        if abs(frame_data["timestamp_seconds"] - timestamp_seconds) < 0.1:
+            return frame_data["gps_coordinates"]
+    
+    return None
 
 # Использование
 if __name__ == "__main__":
@@ -282,11 +355,19 @@ if __name__ == "__main__":
         create_drone_animation_with_gps(
             input_image=input_map,
             output_video="drone_flight_smooth.mp4",
-            duration_seconds=30,  # Увеличил длительность в 2 раза
-            fps=60,
+            duration_seconds=30,
+            fps=30,
             output_size=(640, 640),
             altitude=100
         )
+        
+        # Пример использования функций для чтения данных
+        print("\n📖 Пример чтения GPS данных:")
+        gps_data = read_gps_data("drone_flight_smooth_gps_data.json")
+        print(f"Всего записей: {len(gps_data['flight_data'])}")
+        print(f"Первая запись: {gps_data['flight_data'][0]}")
+        print(f"Последняя запись: {gps_data['flight_data'][-1]}")
+        
     else:
         print(f"Файл {input_map} не найден!")
         print("Убедитесь, что файл карты существует в текущей директории")

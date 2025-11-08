@@ -102,7 +102,7 @@ def visualize_polygons_from_json(json_path, output_image_path):
 if __name__ == "__main__":
     
      
-    JSON_PATH = "output_json/json_55d948091_37d941703_to_55d967844_37d996474.json"
+    JSON_PATH = "output_json/json_55d948091_37d941703_to_55d967844_37d996474_upd_yolo.json"
     base_name = os.path.splitext(os.path.basename(JSON_PATH))[0].replace('json_', '')
     OUTPUT_CENTROIDS = os.path.join("output_yolo_img", f"centroids_{base_name}.jpg")
     
