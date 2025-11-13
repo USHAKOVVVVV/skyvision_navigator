@@ -1,0 +1,12 @@
+new_yolo_env/
+__pycache__/
+# data/
+.cache
+calculate_map.ipynb
+test/
+train/
+valid/
+Scripts_geomap/drone_flight_smooth.mp4
+old_data/test/
+old_data/train/
+old_data/valid/
