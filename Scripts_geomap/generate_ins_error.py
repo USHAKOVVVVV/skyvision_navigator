@@ -47,7 +47,7 @@ def load_flight_data(json_file_path):
     return convert_coordinates_data(data)
 
 def simulate_ins_error_visible(flight_data, gps_loss_start, gps_loss_end, error_intensity=1.0):
-    """Симуляция ЗАМЕТНОЙ ошибки INS при потере GPS"""
+    """Симуляция ЗАМЕТНОЙ ошибки INS при потере GPS с накоплением"""
     modified_data = flight_data.copy()
     
     position_error = 0.0
@@ -56,6 +56,10 @@ def simulate_ins_error_visible(flight_data, gps_loss_start, gps_loss_end, error_
     
     drift_direction_lat = random.uniform(-1, 1)
     drift_direction_lon = random.uniform(-1, 1)
+    
+    # Накопленные ошибки
+    total_lat_error = 0.0
+    total_lon_error = 0.0
     
     in_gps_loss = False
     
@@ -71,29 +75,40 @@ def simulate_ins_error_visible(flight_data, gps_loss_start, gps_loss_end, error_
         if in_gps_loss and frame_num > gps_loss_start:
             position_error += drift_rate * random.uniform(0.8, 1.2)
             
+            # Вычисляем ошибки для текущего кадра
             lat_noise = random.gauss(0, noise_level) * position_error * drift_direction_lat
             lon_noise = random.gauss(0, noise_level) * position_error * drift_direction_lon
+            
+            # Накопление общей ошибки
+            total_lat_error += lat_noise
+            total_lon_error += lon_noise
             
             frame['original_gps'] = {
                 'latitude': frame['gps_coordinates']['latitude'],
                 'longitude': frame['gps_coordinates']['longitude']
             }
             
-            frame['gps_coordinates']['latitude'] += lat_noise
-            frame['gps_coordinates']['longitude'] += lon_noise
+            # Применяем накопленную ошибку
+            frame['gps_coordinates']['latitude'] += total_lat_error
+            frame['gps_coordinates']['longitude'] += total_lon_error
             
             frame['ins_error'] = {
                 'position_error': position_error,
                 'has_gps': False,
                 'corrected_coordinates': False,
-                'lat_error': lat_noise,
-                'lon_error': lon_noise,
+                'lat_error': lat_noise,  # Ошибка за текущий кадр
+                'lon_error': lon_noise,  # Ошибка за текущий кадр
                 'drift_direction_lat': drift_direction_lat,
                 'drift_direction_lon': drift_direction_lon,
-                'total_lat_error': lat_noise,
-                'total_lon_error': lon_noise
+                'total_lat_error': total_lat_error,  # Накопленная ошибка по широте
+                'total_lon_error': total_lon_error   # Накопленная ошибка по долготе
             }
         else:
+            # Сбрасываем накопление при наличии GPS
+            total_lat_error = 0.0
+            total_lon_error = 0.0
+            position_error = 0.0
+            
             if 'ins_error' not in frame:
                 frame['ins_error'] = {
                     'position_error': 0.0,
@@ -109,12 +124,11 @@ def simulate_ins_error_visible(flight_data, gps_loss_start, gps_loss_end, error_
                 frame['ins_error']['position_error'] = 0.0
     
     return modified_data
-
 def apply_visible_ins_error(original_data):
     """Применение симуляции с ЗАМЕТНОЙ ошибкой"""
-    GPS_LOSS_START = 100
-    GPS_LOSS_END = 400
-    ERROR_INTENSITY = 2.0
+    GPS_LOSS_START = 50
+    GPS_LOSS_END = 300
+    ERROR_INTENSITY = 1.5
     
     modified_flight_data = simulate_ins_error_visible(
         original_data['flight_data'],
