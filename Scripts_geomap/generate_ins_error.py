@@ -3,56 +3,20 @@ import random
 import matplotlib.pyplot as plt
 from PIL import Image
 
-def convert_coordinate(coord):
-   
-    # Преобразуем в строку и убираем лишние нули
-    coord_str = f"{float(coord)}"
-    # Убеждаемся, что координата имеет правильную длину
-    if len(coord_str) < 8:
-        return float(coord)
-    
-    # Берем первые 2 цифры как градусы
-    degrees = int(coord_str[:2])
-    # Остальные цифры (без точки) как десятичные доли
-    decimal_part_str = coord_str[2:].replace('.', '')
-    # Собираем обратно в правильный формат
-    result = degrees + float(f"0.{decimal_part_str}")
-    return round(result, 6)
-
-def convert_coordinates_data(data):
-    """Конвертирует все координаты в данных в правильный GPS формат"""
-    converted = data.copy()
-    
-    # Конвертируем координаты карты
-    if 'video_info' in converted and 'map_coordinates' in converted['video_info']:
-        map_coords = converted['video_info']['map_coordinates']
-        map_coords['ll_lat'] = convert_coordinate(map_coords['ll_lat'])
-        map_coords['ll_lon'] = convert_coordinate(map_coords['ll_lon'])
-        map_coords['ur_lat'] = convert_coordinate(map_coords['ur_lat'])
-        map_coords['ur_lon'] = convert_coordinate(map_coords['ur_lon'])
-    
-    # Конвертируем координаты полета
-    if 'flight_data' in converted:
-        for frame in converted['flight_data']:
-            if 'gps_coordinates' in frame:
-                frame['gps_coordinates']['latitude'] = convert_coordinate(frame['gps_coordinates']['latitude'])
-                frame['gps_coordinates']['longitude'] = convert_coordinate(frame['gps_coordinates']['longitude'])
-    
-    return converted
-
 def load_flight_data(json_file_path):
-    """Загрузка данных полета из JSON файла с конвертацией координат"""
+    """Загрузка данных полета из JSON файла"""
     with open(json_file_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
-    return convert_coordinates_data(data)
+    return data
 
 def simulate_ins_error_visible(flight_data, gps_loss_start, gps_loss_end, error_intensity=1.0):
     """Симуляция ЗАМЕТНОЙ ошибки INS при потере GPS с накоплением"""
     modified_data = flight_data.copy()
     
     position_error = 0.0
-    drift_rate = 0.001 * error_intensity  # Малая величина для нормальных координат
-    noise_level = 0.0005 * error_intensity
+    # ОЧЕНЬ МАЛЕНЬКИЕ КОНСТАНТЫ для правильных координат (55.753137)
+    drift_rate = 0.000001 * error_intensity  # Очень маленькая величина
+    noise_level = 0.0000005 * error_intensity  # Очень маленький шум
     
     drift_direction_lat = random.uniform(-1, 1)
     drift_direction_lon = random.uniform(-1, 1)
@@ -96,12 +60,12 @@ def simulate_ins_error_visible(flight_data, gps_loss_start, gps_loss_end, error_
                 'position_error': position_error,
                 'has_gps': False,
                 'corrected_coordinates': False,
-                'lat_error': lat_noise,  # Ошибка за текущий кадр
-                'lon_error': lon_noise,  # Ошибка за текущий кадр
+                'lat_error': lat_noise,
+                'lon_error': lon_noise,
                 'drift_direction_lat': drift_direction_lat,
                 'drift_direction_lon': drift_direction_lon,
-                'total_lat_error': total_lat_error,  # Накопленная ошибка по широте
-                'total_lon_error': total_lon_error   # Накопленная ошибка по долготе
+                'total_lat_error': total_lat_error,
+                'total_lon_error': total_lon_error
             }
         else:
             # Сбрасываем накопление при наличии GPS
@@ -127,8 +91,8 @@ def simulate_ins_error_visible(flight_data, gps_loss_start, gps_loss_end, error_
 def apply_visible_ins_error(original_data):
     """Применение симуляции с ЗАМЕТНОЙ ошибкой"""
     GPS_LOSS_START = 50
-    GPS_LOSS_END = 300
-    ERROR_INTENSITY = 1.5
+    GPS_LOSS_END = 1700
+    ERROR_INTENSITY = 400# Увеличил интенсивность, но константы маленькие
     
     modified_flight_data = simulate_ins_error_visible(
         original_data['flight_data'],
@@ -235,7 +199,7 @@ def save_formatted_json(data, filename):
 
 def main_visible_error():
     """Основная функция для запуска симуляции с ЗАМЕТНОЙ ошибкой"""
-    # Загрузка данных с автоматической конвертацией координат
+    # Загрузка данных (координаты уже в правильном формате)
     original_data = load_flight_data("generate_coords/drone_flight_smooth_gps_data.json")
     
     if not original_data:
@@ -244,14 +208,14 @@ def main_visible_error():
     modified_data = apply_visible_ins_error(original_data)
     
     # Укажите путь к вашему файлу карты
-    input_map = "generate_coords/big_map_with_trajectory.jpg"
+    input_map = "generate_coords/map_55d753137_37d282641_to_55d763143_37d308581.jpg"
     
     plot_gps_trajectory_zoomed(original_data, modified_data, input_map)
     
-    # Сохранение с правильным форматом координат
+    # Сохранение (координаты уже в правильном формате)
     save_formatted_json(modified_data, "flight_data_visible_error.json")
     
-    print("Координаты успешно преобразованы и сохранены в правильном формате!")
+    print("Данные успешно сохранены в правильном формате!")
     print(f"Пример координаты: {modified_data['flight_data'][0]['gps_coordinates']['latitude']:.6f}")
     
     return modified_data

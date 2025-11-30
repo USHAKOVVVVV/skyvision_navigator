@@ -512,7 +512,7 @@ class UnifiedCorrectionVisualizer:
 def main():
     # Конфигурация
     MODEL_PATH = '../runs/segment/yolov8n_gpu_updgrade_1/weights/best.pt'
-    MAP_JSON = 'json_55d948091_37d941703_to_55d967844_37d996474_upd_yolo.json'
+    MAP_JSON = 'json_55d753137_37d282641_to_55d763143_37d308581_upd_yolo.json'
     FLIGHT_DATA_JSON = 'flight_data_visible_error.json'
     VIDEO_PATH = 'drone_flight_smooth.mp4'
     OUTPUT_DIR = 'unified_results'

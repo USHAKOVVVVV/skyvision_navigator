@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 class RANSACMatcher:
-    def __init__(self, num_iterations=1000, inlier_threshold=0.03, min_inliers=3):
+    def __init__(self, num_iterations=1000, inlier_threshold=0.05, min_inliers=2):
         self.num_iterations = num_iterations
         self.inlier_threshold = inlier_threshold
         self.min_inliers = min_inliers
@@ -187,8 +187,8 @@ class DroneCoordinateCorrector:
         self.search_radius = search_radius_meters
         self.ransac = RANSACMatcher(
             num_iterations=1000,
-            inlier_threshold=0.03,
-            min_inliers=3
+            inlier_threshold=0.05,
+            min_inliers=2
         )
         self.visualize = visualize
         if self.visualize:
@@ -305,8 +305,8 @@ class DroneCoordinateCorrector:
             
             # ИСПРАВЛЕННОЕ преобразование (зеркалим по Y):
           
-            x_norm = -(obj_gps[1] - center_lon) / frame_size_degrees # восток -> +X
-            y_norm = (obj_gps[0] - center_lat) / frame_size_degrees # север -> -Y 
+            x_norm = (obj_gps[1] - center_lon) / frame_size_degrees # восток -> +X
+            y_norm = -(obj_gps[0] - center_lat) / frame_size_degrees # север -> -Y 
             map_objects.append([x_norm, y_norm])
             map_classes.append(obj_class)
         
@@ -330,7 +330,7 @@ class DroneCoordinateCorrector:
         
         # Смещение в метрах (учитываем зеркалирование по Y)
         displacement_x_m = map_center[0] * meters_per_normalized_unit   # Восток
-        displacement_y_m = -map_center[1] * meters_per_normalized_unit  # Север (минус из-за зеркалирования)
+        displacement_y_m =  map_center[1] * meters_per_normalized_unit  # Север (минус из-за зеркалирования)
         
         # Конвертируем метры в градусы
         lat_correction_deg = displacement_y_m / 111000.0  # Север = +широта
@@ -440,7 +440,7 @@ class DroneCoordinateCorrector:
         # Объекты карты в GPS координатах
         frame_size_degrees = self.search_radius / 111000.0
         for point in map_points:
-            lat = ins_gps[0] - point[1] * frame_size_degrees
+            lat = ins_gps[0] + point[1] * frame_size_degrees
             lon = ins_gps[1] + point[0] * frame_size_degrees
             all_lats.append(lat)
             all_lons.append(lon)
