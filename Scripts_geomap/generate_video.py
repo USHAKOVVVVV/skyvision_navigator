@@ -47,41 +47,6 @@ def smoothstep(edge0, edge1, x):
     x = np.clip((x - edge0) / (edge1 - edge0), 0.0, 1.0)
     return x * x * (3 - 2 * x)
 
-def create_route_visualization(main_image, coords, waypoints, output_path="route_visualization.jpg"):
-    """Создает визуализацию маршрута на карте"""
-    route_viz = main_image.copy()
-    h, w = route_viz.shape[:2]
-    
-    # Рисуем маршрут
-    route_points = []
-    for lat, lon in waypoints:
-        x, y = latlon_to_pixel(lat, lon, coords, w, h)
-        route_points.append((x, y))
-    
-    # Рисуем линию маршрута
-    for i in range(len(route_points) - 1):
-        cv2.line(route_viz, route_points[i], route_points[i+1], (0, 255, 0), 3)
-    
-    # Рисуем точки маршрута
-    for i, (x, y) in enumerate(route_points):
-        color = (0, 0, 255) if i == 0 else (255, 0, 0) if i == len(route_points)-1 else (0, 255, 255)
-        cv2.circle(route_viz, (x, y), 8, color, -1)
-        cv2.putText(route_viz, f"{i+1}", (x-5, y-10), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-    
-    # Добавляем легенду
-    cv2.putText(route_viz, "Drone Flight Route", (20, 30), 
-               cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-    cv2.putText(route_viz, "Start (Red)", (20, 60), 
-               cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-    cv2.putText(route_viz, "Waypoints (Yellow)", (20, 85), 
-               cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
-    cv2.putText(route_viz, "End (Blue)", (20, 110), 
-               cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-    
-    cv2.imwrite(output_path, route_viz)
-    print(f"Визуализация маршрута сохранена: {output_path}")
-    return route_viz
 
 def create_drone_animation_with_gps(input_image, output_video, duration_seconds=30, 
                                    fps=30, output_size=(640, 640), altitude=100):
@@ -147,7 +112,7 @@ def create_drone_animation_with_gps(input_image, output_video, duration_seconds=
     ]
     
     # Создаем визуализацию маршрута
-    route_viz = create_route_visualization(main_image, coords, waypoints, "flight_route.jpg")
+ 
     
     # Создаем видео writer
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -266,59 +231,21 @@ def create_drone_animation_with_gps(input_image, output_video, duration_seconds=
             cv2.putText(resized, f"Progress: {progress*100:.1f}%", (10, 110), 
                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
             
-            # Добавляем индикатор текущей позиции на мини-карте
-            mini_map_size = 120
-            mini_map = cv2.resize(route_viz, (mini_map_size, mini_map_size), interpolation=cv2.INTER_LANCZOS4)
+       
             
-            # Отмечаем текущую позицию на мини-карте
-            mini_x = int((x_center / w) * mini_map_size)
-            mini_y = int((y_center / h) * mini_map_size)
-            cv2.circle(mini_map, (mini_x, mini_y), 4, (0, 0, 255), -1)
-            
-            # Рисуем траекторию пройденного пути на мини-карте
-            for i in range(min(frame_num // 10, len(positions) // 10)):
-                idx = i * 10
-                if idx < len(positions):
-                    px, py, _, _, _ = positions[idx]
-                    trail_x = int((px / w) * mini_map_size)
-                    trail_y = int((py / h) * mini_map_size)
-                    cv2.circle(mini_map, (trail_x, trail_y), 1, (255, 255, 0), -1)
-            
-            # Вставляем мини-карту в основной кадр
-            resized[10:10+mini_map_size, output_size[0]-10-mini_map_size:output_size[0]-10] = mini_map
-            
-            # Рамка вокруг мини-карты
-            cv2.rectangle(resized, 
-                         (output_size[0]-10-mini_map_size, 10),
-                         (output_size[0]-10, 10+mini_map_size),
-                         (255, 255, 255), 2)
-            
-            out.write(resized)
-        
-        # Прогресс
-        if frame_num % (fps * 5) == 0:  # Сообщение каждые 5 секунд
-            print(f"Обработано: {progress*100:.1f}%")
+             
     
-    out.release()
+    # Сохраняем GPS данные в JSON файл
+       # Преобразуем координаты перед сохранением
+    gps_data_converted = convert_coordinates_data(gps_data)
     
     # Сохраняем GPS данные в JSON файл
     json_filename = output_video.replace('.mp4', '_gps_data.json')
     with open(json_filename, 'w', encoding='utf-8') as f:
-        json.dump(gps_data, f, indent=2, ensure_ascii=False)
-    
+        json.dump(gps_data_converted, f, indent=2, ensure_ascii=False)
     # Также сохраняем упрощенную версию (только ключевые кадры)
-    simplified_data = {
-        "video_info": gps_data["video_info"],
-        "key_frames": []
-    }
-    
-    # Берем каждый 10-й кадр для упрощенной версии
-    for i in range(0, len(gps_data["flight_data"]), 10):
-        simplified_data["key_frames"].append(gps_data["flight_data"][i])
-    
-    simplified_json_filename = output_video.replace('.mp4', '_gps_simplified.json')
-    with open(simplified_json_filename, 'w', encoding='utf-8') as f:
-        json.dump(simplified_data, f, indent=2, ensure_ascii=False)
+    # Также сохраняем упрощенную версию (только ключевые кадры)
+ 
     
     print(f"✅ Видео сохранено: {output_video}")
     print(f"📊 Длительность: {duration_seconds} сек")
@@ -327,7 +254,7 @@ def create_drone_animation_with_gps(input_image, output_video, duration_seconds=
     print(f"📏 Размер: {output_size[0]}x{output_size[1]}")
     print(f"🛩️ Высота: {altitude} м")
     print(f"🗺️ GPS данные сохранены: {json_filename}")
-    print(f"🗺️ Упрощенные GPS данные: {simplified_json_filename}")
+ 
 
 # Функция для чтения GPS данных из JSON
 def read_gps_data(json_file):
@@ -345,18 +272,49 @@ def find_gps_by_time(json_file, timestamp_seconds):
             return frame_data["gps_coordinates"]
     
     return None
+def convert_coordinate(coord):
+    """Преобразует координату из формата 55949078.650004 в 55.949079"""
+    if isinstance(coord, (int, float)):
+        # Если координата в неправильном формате (типа 55949078.650004)
+        if coord > 1000:
+            coord_str = str(int(coord))
+            # Берем первые 2 цифры как градусы, остальные как десятичные
+            degrees = int(coord_str[:2])
+            decimal_part = float("0." + coord_str[2:])
+            return degrees + decimal_part
+    return float(coord)
 
+def convert_coordinates_data(data):
+    """Конвертирует все координаты в данных в правильный GPS формат"""
+    converted = data.copy()
+    
+    # Конвертируем координаты карты
+    if 'video_info' in converted and 'map_coordinates' in converted['video_info']:
+        map_coords = converted['video_info']['map_coordinates']
+        map_coords['ll_lat'] = convert_coordinate(map_coords['ll_lat'])
+        map_coords['ll_lon'] = convert_coordinate(map_coords['ll_lon'])
+        map_coords['ur_lat'] = convert_coordinate(map_coords['ur_lat'])
+        map_coords['ur_lon'] = convert_coordinate(map_coords['ur_lon'])
+    
+    # Конвертируем координаты полета
+    if 'flight_data' in converted:
+        for frame in converted['flight_data']:
+            if 'gps_coordinates' in frame:
+                frame['gps_coordinates']['latitude'] = convert_coordinate(frame['gps_coordinates']['latitude'])
+                frame['gps_coordinates']['longitude'] = convert_coordinate(frame['gps_coordinates']['longitude'])
+    
+    return converted
 # Использование
 if __name__ == "__main__":
     # Укажите путь к вашему файлу карты
-    input_map = "output_img/map_55d948091_37d941703_to_55d967844_37d996474.jpg"
+    input_map = "output_img/map_55d753137_37d282641_to_55d763143_37d308581.jpg"
     
     if os.path.exists(input_map):
         create_drone_animation_with_gps(
             input_image=input_map,
             output_video="drone_flight_smooth.mp4",
             duration_seconds=30,
-            fps=30,
+            fps=60,
             output_size=(640, 640),
             altitude=100
         )

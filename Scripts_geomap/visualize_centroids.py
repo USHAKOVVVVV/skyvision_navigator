@@ -28,7 +28,7 @@ def visualize_polygons_from_json(json_path, output_image_path):
     # Цвета для классов
     class_colors = {
         0: 'red',      # building
-        1: 'green',    # field
+        1: 'yellow',    # field
         2: 'darkgreen', # forest
         3: 'blue',     # lake
         4: 'gray',     # road
@@ -102,7 +102,7 @@ def visualize_polygons_from_json(json_path, output_image_path):
 if __name__ == "__main__":
     
      
-    JSON_PATH = "output_json/json_55d948091_37d941703_to_55d967844_37d996474_upd_yolo.json"
+    JSON_PATH = "output_json/json_55d753137_37d282641_to_55d763143_37d308581_upd_yolo.json"
     base_name = os.path.splitext(os.path.basename(JSON_PATH))[0].replace('json_', '')
     OUTPUT_CENTROIDS = os.path.join("output_yolo_img", f"centroids_{base_name}.jpg")
     
